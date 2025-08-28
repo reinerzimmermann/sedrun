@@ -1,0 +1,329 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  ExternalLink,
+  ChevronDown,
+  Mountain,
+  Snowflake,
+  Wifi,
+  Tv,
+  CookingPot,
+  BedDouble,
+  Sun,
+  Camera,
+  Home
+} from "lucide-react";
+
+// —————— QUICK SETUP ——————
+// 1) Replace the text and URLs in CONFIG below (Airbnb link, images, contact details)
+// 2) Optional: Swap images in the gallery with your own (can be local files in /public)
+// 3) Deploy as a single page in any React/Vite/Next project (component is self‑contained)
+
+const CONFIG = {
+  brand: "Tgèsa Palits – Zimmermann",
+  tagline: "Entdecken Sie unser Zuhause in Sedrun",
+  airbnbUrl: "https://www.airbnb.ch", // ⟵ Ihre echte Buchungs‑URL einsetzen
+  addressLine1: "Tgèsa Palits - Zimmermann",
+  addressLine2: "Via Valtgeva 3",
+  addressLine3: "7188 Sedrun GR",
+  owner: "Fam. Zimmermann",
+  postal: "5037 Muhen",
+  phone: "+41 79 237 7443",
+  email: "sedrun@zworld.ch",
+  mapQuery:
+    "https://www.google.com/maps?q=Via+Valtgeva+3,+7188+Sedrun&output=embed",
+  // Beispielbilder – bitte durch echte Fotos ersetzen
+  gallery: [
+    "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1",
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+    "https://images.unsplash.com/photo-1523419409543-8f8d7fdc9766",
+    "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
+    "https://images.unsplash.com/photo-1518684079-3c830dcef090",
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+  ],
+};
+
+const navItems = [
+  { id: "start", label: "Start" },
+  { id: "willkommen", label: "Willkommen" },
+  { id: "ueber-uns", label: "Über uns" },
+  { id: "ueberblick", label: "Überblick" },
+  { id: "galerie", label: "Galerie" },
+  { id: "links", label: "Nützliche Links" },
+  { id: "kontakt", label: "Kontakt" },
+];
+
+export default function Page() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setOpen(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+      {/* NAV */}
+      <header className={`fixed top-0 inset-x-0 z-50 transition-all ${scrolled ? "bg-white/80 backdrop-blur shadow" : "bg-transparent"}`}>
+        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <button onClick={() => scrollTo("start")} className="flex items-center gap-2 font-semibold">
+            <Home className="w-5 h-5" />
+            <span>{CONFIG.brand}</span>
+          </button>
+          <div className="hidden md:flex items-center gap-6">
+            {navItems.map((n) => (
+              <button key={n.id} onClick={() => scrollTo(n.id)} className="text-sm hover:opacity-80">
+                {n.label}
+              </button>
+            ))}
+            <a href={CONFIG.airbnbUrl} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-2xl shadow border hover:shadow-md text-sm flex items-center gap-2">
+              Jetzt buchen <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+          <button onClick={() => setOpen(!open)} className="md:hidden p-2 rounded-xl border shadow-sm">
+            Menü
+          </button>
+        </nav>
+        {open && (
+          <div className="md:hidden border-t bg-white">
+            <div className="max-w-6xl mx-auto px-4 py-2 flex flex-col gap-2">
+              {navItems.map((n) => (
+                <button key={n.id} onClick={() => scrollTo(n.id)} className="py-2 text-left">
+                  {n.label}
+                </button>
+              ))}
+              <a href={CONFIG.airbnbUrl} target="_blank" rel="noreferrer" className="py-2 flex items-center gap-2">
+                Jetzt buchen <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* HERO */}
+      <section id="start" className="relative overflow-hidden">
+        <div className="h-[78vh] md:h-[86vh] grid place-items-center bg-[url('https://images.unsplash.com/photo-1482192505345-5655af888cc4')] bg-cover bg-center">
+          <div className="backdrop-brightness-90 w-full h-full grid place-items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="text-center px-6"
+            >
+              <h1 className="text-3xl md:text-5xl font-bold mb-3">Herzlich Willkommen</h1>
+              <p className="text-base md:text-lg opacity-90 max-w-2xl mx-auto">
+                {CONFIG.tagline}
+              </p>
+              <div className="mt-6 flex items-center justify-center gap-3">
+                <a href={CONFIG.airbnbUrl} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-2xl shadow border hover:shadow-md inline-flex items-center gap-2">
+                  Jetzt buchen
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <button onClick={() => scrollTo("willkommen")} className="px-5 py-3 rounded-2xl bg-white shadow hover:shadow-md inline-flex items-center gap-2">
+                  Mehr erfahren
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* WILLKOMMEN / INTRO */}
+      <section id="willkommen" className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="aspect-[4/3] rounded-2xl overflow-hidden shadow">
+            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" alt="Ferienwohnung – Sedrun" className="w-full h-full object-cover" />
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4">Entdecken Sie Unser Zuhause</h2>
+            <p className="opacity-90 leading-relaxed">
+              Tgèsa Palits – Zimmermann ist eine frisch renovierte Ferienwohnung in Sedrun. Mit Balkon und herrlicher Aussicht bietet sie den perfekten Rückzugsort – nur wenige Schritte vom Skigebiet, Bahnhof sowie Restaurants und Supermärkten entfernt. Unser Ziel ist es, Ihnen einen unvergesslichen Aufenthalt zu bieten.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Feature icon={<Snowflake className="w-5 h-5" />} label="Nahe Skigebiet" />
+              <Feature icon={<MapPin className="w-5 h-5" />} label="Top Lage" />
+              <Feature icon={<Wifi className="w-5 h-5" />} label="WLAN" />
+              <Feature icon={<Tv className="w-5 h-5" />} label="Smart‑TV" />
+              <Feature icon={<CookingPot className="w-5 h-5" />} label="Voll ausgestattete Küche" />
+              <Feature icon={<BedDouble className="w-5 h-5" />} label="Komfortable Betten" />
+              <Feature icon={<Sun className="w-5 h-5" />} label="Balkon & Aussicht" />
+              <Feature icon={<Mountain className="w-5 h-5" />} label="Berge pur" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ÜBER UNS */}
+      <section id="ueber-uns" className="bg-white/60 border-y">
+        <div className="max-w-6xl mx-auto px-4 py-16">
+          <div className="grid md:grid-cols-2 gap-10 items-start">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4">Über uns</h2>
+              <p className="opacity-90 leading-relaxed">
+                Unsere Geschichte beginnt in Sedrun. Die Wohnung wurde umfassend modernisiert und verbindet alpinen Charme mit zeitgemäßem Komfort. Dank der Nähe zu Bahn, Skiliften und Einkaufsmöglichkeiten erreichen Sie alles in wenigen Minuten zu Fuß.
+              </p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="aspect-[4/3] rounded-2xl overflow-hidden shadow">
+              <img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66" alt="Balkon mit Aussicht" className="w-full h-full object-cover" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ÜBERBLICK / AUSSTATTUNG + BUCHEN */}
+      <section id="ueberblick" className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid lg:grid-cols-2 gap-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="p-6 rounded-2xl bg-white shadow">
+            <h3 className="text-xl md:text-2xl font-semibold mb-4">Ausstattung</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "WLAN & Internet‑Radio",
+                "Smart‑TV",
+                "Balkon mit Aussicht",
+                "Voll ausgestattete Küche",
+                "Nähe Skigebiet (50 m)",
+                "Nähe Bahnhof (50 m)",
+                "Restaurants & Supermärkte (150 m)",
+              ].map((t) => (
+                <li key={t} className="flex items-start gap-2">
+                  <span className="mt-1 inline-block w-2 h-2 rounded-full bg-neutral-800" />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="p-6 rounded-2xl bg-white shadow">
+            <h3 className="text-xl md:text-2xl font-semibold mb-4">Buchung</h3>
+            <p className="opacity-90 mb-5">Buchen Sie bequem über Airbnb oder kontaktieren Sie uns direkt.</p>
+            <div className="flex flex-wrap gap-3">
+              <a href={CONFIG.airbnbUrl} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-2xl shadow border inline-flex items-center gap-2">
+                AirBnB ansehen <ExternalLink className="w-4 h-4" />
+              </a>
+              <button onClick={() => scrollTo("kontakt")} className="px-4 py-2 rounded-2xl bg-neutral-900 text-white shadow hover:shadow-md">
+                Direkt anfragen
+              </button>
+              <a href="#lage" onClick={(e)=>{e.preventDefault(); scrollTo("lage");}} className="px-4 py-2 rounded-2xl border inline-flex items-center gap-2">
+                Lage ansehen <MapPin className="w-4 h-4" />
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* GALERIE */}
+      <section id="galerie" className="bg-white/60 border-y">
+        <div className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6 flex items-center gap-3">
+            <Camera className="w-6 h-6" /> Galerie
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {CONFIG.gallery.map((src, i) => (
+              <motion.div key={i} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="aspect-[4/3] rounded-xl overflow-hidden shadow">
+                <img src={src + "?auto=format&fit=crop&w=1200&q=60"} alt={`Foto ${i+1}`} className="w-full h-full object-cover" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NÜTZLICHE LINKS */}
+      <section id="links" className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-6">Nützliche Links</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          <LinkCard title="Andermatt Sedrun Disentis – Homepage" href="https://www.andermatt-sedrun-disentis.ch" />
+          <LinkCard title="Digitale Gästekarte" href="https://www.andermatt-sedrun-disentis.ch" />
+          <LinkCard title="Mountainbiken in der Region" href="https://www.andermatt-sedrun-disentis.ch" />
+          <LinkCard title="Kneipp‑Weg Graubünden" href="https://www.graubuenden.ch" />
+          <LinkCard title="Golfplatz Sedrun" href="https://www.andermatt-sedrun-disentis.ch" />
+          <LinkCard title="Hallenbad Sedrun" href="https://www.andermatt-sedrun-disentis.ch" />
+          <LinkCard title="Goldwaschen & Kristallsuchen" href="https://www.andermatt-sedrun-disentis.ch" />
+        </div>
+      </section>
+
+      {/* LAGE (Map) */}
+      <section id="lage" className="bg-white/60 border-y">
+        <div className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6 flex items-center gap-3">
+            <MapPin className="w-6 h-6" /> Lage
+          </h2>
+          <div className="rounded-2xl overflow-hidden shadow">
+            <iframe
+              title="Karte Sedrun"
+              src={CONFIG.mapQuery}
+              className="w-full h-[400px]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* KONTAKT */}
+      <footer id="kontakt" className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-2 gap-10">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4">Kontakt</h2>
+            <div className="space-y-1">
+              <p className="font-medium">{CONFIG.addressLine1}</p>
+              <p>{CONFIG.addressLine2}</p>
+              <p>{CONFIG.addressLine3}</p>
+              <p className="pt-2">{CONFIG.owner}</p>
+              <p>{CONFIG.postal}</p>
+            </div>
+            <div className="mt-4 space-y-2">
+              <a href={`tel:${CONFIG.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 hover:underline">
+                <Phone className="w-4 h-4" /> {CONFIG.phone}
+              </a>
+              <a href={`mailto:${CONFIG.email}`} className="flex items-center gap-2 hover:underline">
+                <Mail className="w-4 h-4" /> {CONFIG.email}
+              </a>
+            </div>
+            <p className="text-sm opacity-70 mt-6">© {new Date().getFullYear()} {CONFIG.addressLine1}</p>
+          </div>
+
+          {/* Mini Anfrage (ohne Backend, öffnet Mail) */}
+          <div className="p-6 rounded-2xl bg-white shadow">
+            <h3 className="text-lg font-semibold mb-2">Direkt anfragen</h3>
+            <p className="text-sm opacity-80 mb-4">Senden Sie uns eine E‑Mail mit Ihrem gewünschten Zeitraum und Anzahl Gäste.</p>
+            <a
+              href={`mailto:${CONFIG.email}?subject=Anfrage%20Tg%C3%A8sa%20Palits&body=Guten%20Tag%20Fam.%20Zimmermann,%0D%0A%0D%0Aich%20interessiere%20mich%20f%C3%BCr%20einen%20Aufenthalt%20in%20Sedrun.%20Zeitraum:%20_____%20G%C3%A4ste:%20_____%0D%0A%0D%0ABesten%20Dank!`}
+              className="px-4 py-3 rounded-2xl bg-neutral-900 text-white shadow inline-flex items-center gap-2"
+            >
+              E‑Mail schreiben <Mail className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function Feature({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="px-3 py-2 rounded-xl bg-white shadow border inline-flex items-center gap-2">
+      {icon}
+      <span className="text-sm">{label}</span>
+    </div>
+  );
+}
+
+function LinkCard({ title, href }: { title: string; href: string }) {
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className="p-4 rounded-2xl bg-white shadow hover:shadow-md border flex items-center justify-between">
+      <span className="mr-4">{title}</span>
+      <ExternalLink className="w-4 h-4 shrink-0" />
+    </a>
+  );
+}
